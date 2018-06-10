@@ -103,6 +103,8 @@
           zoom: 6
         });
 
+        poiMarkers = [];
+
         var positionMarker = new google.maps.Marker({
           map: map,
           animation: google.maps.Animation.DROP,
@@ -142,6 +144,12 @@
       }     
 
       function submitClicked(position, map) {
+
+        for (var i = 0; i < poiMarkers.length; i++) {
+          poiMarkers[i].setMap(null);
+        }
+        poiMarkers = [];
+
         var selectedValue = $('#typeSelect').val();
         var request = {
           location: position,
@@ -168,6 +176,7 @@
           position: location.geometry.location, 
           label: labels[i % labels.length]
         });
+        poiMarkers[poiMarkers.length] = m;
       }
       
     </script>
