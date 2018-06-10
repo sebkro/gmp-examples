@@ -170,13 +170,12 @@
 
       function addMarker(map, i, location) {
         var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        var m = new google.maps.Marker({
+        var infowindow = new google.maps.InfoWindow({
+          content: location.name,
           map: map,
-          position: location.geometry.location, 
-          label: labels[i % labels.length]
+          position: location.geometry.location
         });
-        poiMarkers[poiMarkers.length] = m;
+        poiMarkers[poiMarkers.length] = infowindow;
       }
       
     </script>
