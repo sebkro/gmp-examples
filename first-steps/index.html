@@ -43,6 +43,56 @@
           </div>
         </div>
       </div>
+
+      <div class="row mt-2">
+        <div class="offset-sm-3 col-sm-6">
+          <form id="form" class="d-none">
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Wähle einen Typ nach dem gesucht werden soll</label>
+              <select id="typeSelect" class="form-control" id="exampleFormControlSelect1">
+                <option value="airport">Flughafen</option>
+                <option value="amusement_park">Freizeitpark</option>
+                <option value="aquarium">Aquarium</option>
+                <option value="art_gallery">Kunstgalerie</option>
+                <option value="atm">Geldautomat</option>
+                <option value="bakery">Bäckerei</option>
+                <option value="bank">Bank</option>
+                <option value="bar">Bar</option>
+                <option value="beauty_salon">Schönheitssalon</option>
+                <option value="bicycle_store">Fahrradladen</option>
+                <option value="book_store">Buchhandlung</option>
+                <option value="bowling_alley">Kegelbahn</option>
+                <option value="bus_station">Bushaltestelle</option>
+                <option value="cafe">Cafe</option>
+                <option value="campground">Campingplatz</option>
+                <option value="car_dealer">Autohändler</option>
+                <option value="car_rental">Autovermietung</option>
+                <option value="car_repair">Autoreparatur</option>
+                <option value="car_wash">Autowäsche</option>
+                <option value="casino">Kasino</option>
+                <option value="cemetery">Friedhof</option>
+                <option value="church">Kirche</option>
+                <option value="city_hall">Rathaus</option>
+                <option value="clothing_store">Bekleidungsgeschäft</option>
+                <option value="convenience_store">Gemischtwarenladen</option>
+                <option value="courthouse">Gerichtsgebäude</option>
+                <option value="dentist">Zahnarzt</option>
+                <option value="department_store">Kaufhaus</option>
+                <option value="doctor">Arzt</option>
+                <option value="electrician">Elektriker</option>
+                <option value="electronics_store">Elektronikladen</option>
+                <option value="embassy">Botschaft</option>
+                <option value="fire_station">Feuerwehr</option>
+                <option value="florist">Florist</option>
+                <option value="furniture_store">Möbelgeschäft</option>
+                <option value="gas_station">Tankstelle</option>
+                <option value="gym">Fitnessstudio</option>
+              </select>
+            </div>
+            <button id="btnSearch" type="submit" class="btn btn-primary">Suche</button>
+          </form>
+        </div>
+      </div>
     </div> 
 
     <script>
@@ -53,7 +103,7 @@
           zoom: 6
         });
 
-        positionMarker = new google.maps.Marker({
+        var positionMarker = new google.maps.Marker({
           map: map,
           animation: google.maps.Animation.DROP,
           title: 'Position'
@@ -70,6 +120,13 @@
             positionMarker.setPosition(pos);
             map.setZoom(10);
             map.setCenter(pos);
+
+            $('#form').removeClass('d-none');
+            $('#btnSearch').click(function(e) {
+              e.preventDefault();
+              submitClicked(pos, map);
+            });
+
           }, function() {
             handleErrorGeolocation(true);
           });
@@ -82,13 +139,42 @@
         var errorText = browserHasGeolocation ? "Du musst uns Zugriff auf deine Position geben!!!" : "Dein Browser unterstützt keine Ortung";
         $('#mapAlertText').text(errorText);
         $('#mapAlert').removeClass('d-none');
-      }      
+      }     
+
+      function submitClicked(position, map) {
+        var selectedValue = $('#typeSelect').val();
+        var request = {
+          location: position,
+          radius: '500',
+          type: selectedValue
+        };
+
+        var placesService = new google.maps.places.PlacesService(map);
+        placesService.nearbySearch(request, function(results, status) {
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+              addMarker(map, i, results[i]);
+            }
+          }
+          
+        });
+      }
+
+      function addMarker(map, i, location) {
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        var m = new google.maps.Marker({
+          map: map,
+          position: location.geometry.location, 
+          label: labels[i % labels.length]
+        });
+      }
       
     </script>
 
 
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=places">
     </script>
 
   </body>
