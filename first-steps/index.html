@@ -30,7 +30,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <div class="container">
-      
+      <div class="row mt-5">
+        <div id="map" class="offset-sm-3 col-sm-6"></div>
+      </div>
     </div> 
+
+    <script>
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 6
+        });      
+      }
+    </script>
+
+
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap">
+    </script>
+
   </body>
 </html>
